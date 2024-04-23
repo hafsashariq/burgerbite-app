@@ -13,7 +13,7 @@ export const HeaderComponent = ({ navigation, title, navigationTo }) => {
                     </TouchableOpacity>
                 ) :
                     <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
-                        <Logo uri={Images.logo} width={90} height={64} />
+                        <Logo uri={Images.logo} width={80} height={40} />
                     </TouchableOpacity>
                 }
             </View>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 10,
+        paddingHorizontal: 16,
         paddingBottom: 8,
         backgroundColor: Colors.white,
         shadowColor: '#000',
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.50,
         shadowRadius: 4,
         elevation: 5,
-        paddingTop: 50
+        paddingTop: 60
     },
     headerLeft: {
         flex: 1,
