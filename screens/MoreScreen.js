@@ -1,28 +1,132 @@
-import React, {  } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity, Alert } from 'react-native';
 import { Colors } from '../config';
-import { HeaderComponent } from '../components';
+import { HeaderComponent, Button } from '../components';
+import { signOut } from 'firebase/auth';
+import { auth } from '../config';
+import { onAuthStateChanged } from 'firebase/auth';
+import { AuthenticatedUserContext } from '../providers';
 export const MoreScreen = ({ navigation }) => {
+    const { user, setUser } = useContext(AuthenticatedUserContext);
+
+    useEffect(() => {
+        // onAuthStateChanged returns an unsubscriber
+        const unsubscribeAuthStateChanged = onAuthStateChanged(
+            auth,
+            authenticatedUser => {
+                setUser(authenticatedUser);
+            }
+        );
+        // unsubscribe auth listener on unmount
+        return unsubscribeAuthStateChanged;
+    }, [setUser]);
+
+    const settingsList = [
+        { name: user ? "My Account" : "Sign in or create an account", screen: user ? "MyAccountScreen" : "LoginScreen" },
+        { name: "Locations", screen: "LocationScreen" },
+        { name: "Terms and Conditions", screen: "TermsAndConditionScreen" },
+        { name: "Privacy Policy", screen: "PrivacyPolicyScreen" },
+    ];
+
+    const handleSignOut = async () => {
+        Alert.alert(
+            'Confirm Sign Out',
+            'Are you sure you want to sign out?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK',
+                    onPress: async () => {
+                        try {
+                            await signOut(auth);
+                            navigation.navigate('HomeScreen');
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
+    const navigateToScreen = (screen) => {
+        navigation.navigate(screen, { navigationTo: 'goBack' });
+    };
 
     return (
         <>
             <HeaderComponent navigation={navigation} />
-            <View style={styles.container}><Text style={styles.title}>{"More screen"}</Text></View>
+            <View style={styles.container}>
+                <ScrollView contentContainerStyle={styles.scrollContent}>
+                    {settingsList.map((setting, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.settingItemContainer}
+                            onPress={() => navigateToScreen(setting.screen)}
+                        >
+                            <Text style={styles.settingItemText}>{setting.name}</Text>
+                            <Text style={styles.arrow}>{">"}</Text>
+                        </TouchableOpacity>
+                    ))}
+                    {user && (
+                        <View style={styles.signOutSection}>
+                            <Button style={styles.button} onPress={handleSignOut}>
+                                <Text style={styles.buttonText}>Sign Out</Text>
+                            </Button>
+                        </View>
+                    )}
+                </ScrollView>
+            </View>
         </>
-    )
+    );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        zIndex: -1,
         backgroundColor: Colors.white,
+        zIndex: -1,
     },
-    title: {
-        fontSize: 32,
-        fontWeight: '600',
+    scrollContent: {
+        flexGrow: 1,
+        marginTop: 20
+    },
+    button: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8,
+        backgroundColor: Colors.yellow,
+        padding: 10,
+        borderRadius: 8
+    },
+    buttonText: {
+        fontSize: 20,
+        color: Colors.white,
+        fontWeight: '700'
+    },
+    settingItemContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: Colors.lightGray,
+    },
+    settingItemText: {
+        fontSize: 18,
         color: Colors.black,
-        paddingTop: 20,
-        textAlign: 'center',
-    }
+    },
+    arrow: {
+        fontSize: 18,
+        color: Colors.gray,
+    },
+
+    signOutSection: {
+        padding: 20
+    },
 });
