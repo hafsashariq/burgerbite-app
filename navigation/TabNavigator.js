@@ -52,7 +52,7 @@ export const TabNavigator = () => {
                             style={{ marginRight: 0 }} />
                     ),
                 }} />
-                <Tab.Screen name="Offers" component={MyOfferScreen} options={{
+                <Tab.Screen name="Offers" component={user ? MyOfferScreen : AuthStack} options={{
                     tabBarLabel: 'OFFERS',
                     tabBarActiveTintColor: Colors.orange,
                     tabBarInactiveTintColor: Colors.mediumGray,
@@ -61,7 +61,7 @@ export const TabNavigator = () => {
                             style={{ marginRight: 0 }} />
                     ),
                 }} />
-                <Tab.Screen name="Rewards" component={RewardScreen} options={{
+                <Tab.Screen name="Rewards" component={user ? RewardScreen : AuthStack} options={{
                     tabBarLabel: 'REWARDS',
                     tabBarActiveTintColor: Colors.orange,
                     tabBarInactiveTintColor: Colors.mediumGray,
