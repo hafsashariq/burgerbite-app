@@ -89,13 +89,13 @@ export const HomeScreen = ({ navigation }) => {
     return (
       <View style={styles.qrSection}>
         <View style={styles.qrCodeContainer}>
-          <QRCode value={String(user.memberNumber)} size={134} />
+          <QRCode value={String(user.memberNumber)} size={135} />
         </View>
         <View style={styles.pointsBalanceContainer}>
           <Text style={styles.customerName}>{user.firstName} {user.lastName}</Text>
           <Text style={styles.titleText}>Member Number</Text>
           <Text style={styles.pointBalance}>{user.memberNumber}</Text>
-          <Text style={styles.titleText}>BurgerBite Points</Text>
+          <Text style={styles.titleText}>Store Points</Text>
           <Text style={styles.pointBalance}>{user.pointBalance ? user.pointBalance.toLocaleString() : 0}</Text>
         </View>
       </View>
@@ -242,14 +242,13 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     color: Colors.white,
     flexDirection: 'row',
-    margin: 4,
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
     marginTop: 20,
-    flex: 1,
   },
   qrCodeContainer: {
     padding: 16,
     paddingRight: 0,
-    margin: 0,
   },
   pointsBalanceContainer: {
     flex: 1,
