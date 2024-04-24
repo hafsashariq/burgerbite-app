@@ -13,7 +13,7 @@ const OVERLAP_RATIO = 0.01;
 
 export const MyOfferScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
-  const [ogaloOffers, setOgaloOffers] = useState([]);
+  const [storeOffers, setStoreOffers] = useState([]);
   const [myOffers, setMyOffers] = useState([]);
   const [activeBannerIndex, setActiveBannerIndex] = useState(0);
   const [activemyOffersIndex, setActivemyOffersIndex] = useState(0);
@@ -27,8 +27,8 @@ export const MyOfferScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ogaloOffers = await getOffers();
-        setOgaloOffers(ogaloOffers);
+        const storeOffers = await getOffers();
+        setStoreOffers(storeOffers);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -132,14 +132,14 @@ export const MyOfferScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={styles.featuredContainer}>
-            <Text style={styles.title}>Ogalo Offers</Text>
+            <Text style={styles.title}>Store Offers</Text>
             <Animated.FlatList
               horizontal
-              data={ogaloOffers}
+              data={storeOffers}
               keyExtractor={(item) => item.uid}
               renderItem={({ item, index }) => (
                 <TouchableOpacity onPress={() => openModal(item)}>
-                  <View style={[styles.featuredImageContainer, index !== ogaloOffers.length - 1 && styles.imageSpacing]}>
+                  <View style={[styles.featuredImageContainer, index !== storeOffers.length - 1 && styles.imageSpacing]}>
                     <Image
                       source={{ uri: item.imageUrl }}
                       style={styles.featuredImage}
@@ -156,7 +156,7 @@ export const MyOfferScreen = ({ navigation }) => {
               ref={bannerScrollViewRef}
             />
             <View style={styles.dotsContainer}>
-              {ogaloOffers.map((_, index) => (
+              {storeOffers.map((_, index) => (
                 <TouchableOpacity
                   key={index}
                   onPress={() => bannerScrollViewRef.current.scrollToIndex({ index, animated: true })}
