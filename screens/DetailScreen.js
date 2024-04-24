@@ -9,12 +9,12 @@ export const DetailScreen = ({ route, navigation }) => {
 
     return (
         <>
-        <HeaderComponent navigation={navigation} title={title} navigationTo= "home"/>
-        <View style={styles.container}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Image source={{ uri: item.imageUrl }} style={styles.image} />
-            <Text style={styles.description}>{item.details}</Text>
-        </View>
+            <HeaderComponent navigation={navigation} title={title} navigationTo="home" />
+            <View style={styles.container}>
+                <Text style={styles.title}>{item.title}</Text>
+                <Image source={{ uri: item.imageUrl }} style={styles.image} />
+                <Text style={styles.description}>{item.details}</Text>
+            </View>
         </>
     );
 };
