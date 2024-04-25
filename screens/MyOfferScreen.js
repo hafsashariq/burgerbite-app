@@ -99,71 +99,88 @@ export const MyOfferScreen = ({ navigation }) => {
         <View>
           <View style={styles.featuredContainer}>
             <Text style={styles.title}>Your Offers</Text>
-            <Animated.FlatList
-              horizontal
-              data={myOffers}
-              keyExtractor={(item) => item.uid}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => openModal(item)}>
-                  <View style={[styles.featuredImageContainer, styles.imageSpacing]}>
-                    <Image
-                      source={{ uri: item.imageUrl }}
-                      style={styles.featuredImage}
-                    />
-                  </View>
-                </TouchableOpacity>
-              )}
-              showsHorizontalScrollIndicator={false}
-              pagingEnabled
-              snapToInterval={ITEM_WIDTH + screenWidth * OVERLAP_RATIO}
-              decelerationRate="fast"
-              onScroll={handlemyOffersScroll}
-              scrollEventThrottle={16}
-              ref={myOffersScrollViewRef}
-            />
-            <View style={styles.dotsContainer}>
-              {myOffers.map((_, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => myOffersScrollViewRef.current.scrollToIndex({ index, animated: true })}
-                  style={[styles.dot, activemyOffersIndex === index ? styles.activeDot : null]}
+            {myOffers.length == 0 && (
+              <View style={styles.detailsText}>
+                <Text>No offers yet ...</Text></View>
+            )}
+            {myOffers && (
+              <>
+                <Animated.FlatList
+                  horizontal
+                  data={myOffers}
+                  keyExtractor={(item) => item.uid}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => openModal(item)}>
+                      <View style={[styles.featuredImageContainer, styles.imageSpacing]}>
+                        <Image
+                          source={{ uri: item.imageUrl }}
+                          style={styles.featuredImage}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  showsHorizontalScrollIndicator={false}
+                  pagingEnabled
+                  snapToInterval={ITEM_WIDTH + screenWidth * OVERLAP_RATIO}
+                  decelerationRate="fast"
+                  onScroll={handlemyOffersScroll}
+                  scrollEventThrottle={16}
+                  ref={myOffersScrollViewRef}
                 />
-              ))}
-            </View>
+                <View style={styles.dotsContainer}>
+                  {myOffers.map((_, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => myOffersScrollViewRef.current.scrollToIndex({ index, animated: true })}
+                      style={[styles.dot, activemyOffersIndex === index ? styles.activeDot : null]}
+                    />
+                  ))}
+                </View>
+              </>
+            )
+            }
           </View>
           <View style={styles.featuredContainer}>
             <Text style={styles.title}>Store Offers</Text>
-            <Animated.FlatList
-              horizontal
-              data={storeOffers}
-              keyExtractor={(item) => item.uid}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity onPress={() => openModal(item)}>
-                  <View style={[styles.featuredImageContainer, index !== storeOffers.length - 1 && styles.imageSpacing]}>
-                    <Image
-                      source={{ uri: item.imageUrl }}
-                      style={styles.featuredImage}
-                    />
-                  </View>
-                </TouchableOpacity>
-              )}
-              showsHorizontalScrollIndicator={false}
-              pagingEnabled
-              snapToInterval={ITEM_WIDTH + screenWidth * OVERLAP_RATIO}
-              decelerationRate="fast"
-              onScroll={handleBannerScroll}
-              scrollEventThrottle={16}
-              ref={bannerScrollViewRef}
-            />
-            <View style={styles.dotsContainer}>
-              {storeOffers.map((_, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => bannerScrollViewRef.current.scrollToIndex({ index, animated: true })}
-                  style={[styles.dot, activeBannerIndex === index ? styles.activeDot : null]}
+            {storeOffers.length == 0 && (
+              <View style={styles.detailsText}>
+                <Text>No offers yet ...</Text></View>
+            )}
+            {storeOffers && (
+              <>
+                <Animated.FlatList
+                  horizontal
+                  data={storeOffers}
+                  keyExtractor={(item) => item.uid}
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity onPress={() => openModal(item)}>
+                      <View style={[styles.featuredImageContainer, index !== storeOffers.length - 1 && styles.imageSpacing]}>
+                        <Image
+                          source={{ uri: item.imageUrl }}
+                          style={styles.featuredImage}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  showsHorizontalScrollIndicator={false}
+                  pagingEnabled
+                  snapToInterval={ITEM_WIDTH + screenWidth * OVERLAP_RATIO}
+                  decelerationRate="fast"
+                  onScroll={handleBannerScroll}
+                  scrollEventThrottle={16}
+                  ref={bannerScrollViewRef}
                 />
-              ))}
-            </View>
+                <View style={styles.dotsContainer}>
+                  {storeOffers.map((_, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => bannerScrollViewRef.current.scrollToIndex({ index, animated: true })}
+                      style={[styles.dot, activeBannerIndex === index ? styles.activeDot : null]}
+                    />
+                  ))}
+                </View>
+              </>
+            )}
           </View>
         </View>
       </ScrollView>

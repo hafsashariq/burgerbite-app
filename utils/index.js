@@ -16,13 +16,6 @@ export const signupValidationSchema = Yup.object().shape({
     .required('Confirm Password is required.'),
   firstName: Yup.string().required().min(3).label('First Name'),
   lastName: Yup.string().required().min(3).label('Last Name'),
-  dateOfBirth: Yup.string()
-    .required('Date of Birth is required.')
-    .matches(
-      /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/,
-      'Date of Birth must be in DD/MM/YYYY format'
-    )
-    .label('Date of Birth'),
   phoneNumber: Yup.string().matches(phoneRegExp, 'Invalid Australian Phone number, eg: 04XXXXXXXXX')
 });
 

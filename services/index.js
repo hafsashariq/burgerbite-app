@@ -1,4 +1,4 @@
-import { fetchUserDetails, fetchUserOffers } from './firebaseUserService';
+import { fetchUserDetails, fetchUserOffers, fetchUserByPhoneNumber } from './firebaseUserService';
 import { getBanners, getLocations, getOffers, getWhatsNew } from './firebasePublicDataService';
 export {
     fetchUserDetails,
@@ -6,5 +6,6 @@ export {
     getLocations,
     getOffers,
     getWhatsNew,
-    fetchUserOffers
+    fetchUserOffers,
+    fetchUserByPhoneNumber
 };
