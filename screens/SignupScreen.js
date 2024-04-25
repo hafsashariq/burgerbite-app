@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { View, TextInput, Button, FormErrorMessage, HeaderComponent } from '../components';
-import { Colors } from '../config';
+import { View, TextInput, FormErrorMessage, HeaderComponent, Button } from '../components';
+import { Colors, auth, db } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
+import { fetchUserByPhoneNumber } from '../services';
 
 export const SignupScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
@@ -19,8 +22,47 @@ export const SignupScreen = ({ navigation }) => {
     confirmPasswordVisibility
   } = useTogglePasswordVisibility();
 
-  const handleSignup = async () => {
-    showAlert('User created');
+  const handleSignup = async values => {
+
+    const { email, password, firstName, lastName, phoneNumber } = values;
+
+    try {
+      // Check if email is already registered in Firebase Authentication
+      const emailExists = await fetchSignInMethodsForEmail(auth, email);
+      if (emailExists.length > 0) {
+        showAlert('Email is already registered.');
+        return; // Stop signup process
+      }
+
+      // Check if phone number is already registered in Firebase Users collection
+      const phoneNumberSnapshot = await fetchUserByPhoneNumber(phoneNumber);
+      if (phoneNumberSnapshot) {
+        showAlert('Phone number is already registered.');
+        return; // Stop signup process
+      }
+
+      // If email and phone number are not already registered, proceed with signup
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const timestamp = new Date().getTime();
+      const randomNum = Math.floor(Math.random() * 9000000000) + 1000000000;
+      const memberNumber = parseInt(timestamp.toString().slice(-3) + randomNum.toString().slice(-7));
+
+      if (result) {
+        const user = {
+          email,
+          phoneNumber,
+          firstName,
+          lastName,
+          memberNumber
+        }
+        await setDoc(doc(db, "users", result.user.uid), user);
+        showAlert('Account has been created successfully');
+        navigation.navigate('HomeScreen');
+      }
+    } catch (error) {
+      console.log('error', error);
+      setErrorState(error.message);
+    }
   };
 
   const showAlert = message => {
@@ -30,16 +72,15 @@ export const SignupScreen = ({ navigation }) => {
       console.log(message);
     }
   };
+
   return (
     <>
       <HeaderComponent navigationTo={"LoginScreen"} navigation={navigation} />
       <View style={styles.container}>
         <KeyboardAwareScrollView enableOnAndroid={true}>
-          {/* LogoContainer: consits app logo and screen title */}
           <View style={styles.logoContainer}>
             <Text style={styles.screenTitle}>Create a new account!</Text>
           </View>
-          {/* Formik Wrapper */}
           <Formik
             initialValues={{
               email: '',
@@ -48,7 +89,6 @@ export const SignupScreen = ({ navigation }) => {
               firstName: '',
               lastName: '',
               phoneNumber: '',
-              dateOfBirth: ''
             }}
             validationSchema={signupValidationSchema}
             onSubmit={values => handleSignup(values)}
@@ -57,7 +97,6 @@ export const SignupScreen = ({ navigation }) => {
               values, touched, errors, handleChange, handleSubmit, handleBlur
             }) => (
               <>
-                {/* Input fields */}
                 <TextInput
                   name='email'
                   leftIconName='email'
@@ -65,11 +104,25 @@ export const SignupScreen = ({ navigation }) => {
                   autoCapitalize='none'
                   keyboardType='email-address'
                   textContentType='emailAddress'
-                  autoFocus={true} // Only one autoFocus
+                  autoFocus={true}
                   value={values.email}
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')} />
                 <FormErrorMessage error={errors.email} visible={touched.email} />
+
+                <TextInput
+                  name='phoneNumber'
+                  leftIconName='phone'
+                  placeholder='Enter Phone Number'
+                  autoCapitalize='none'
+                  keyboardType='number-pad'
+                  textContentType='telephoneNumber'
+                  autoFocus={true}
+                  value={values.phoneNumber}
+                  onChangeText={handleChange('phoneNumber')}
+                  onBlur={handleBlur('phoneNumber')} />
+                <FormErrorMessage error={errors.phoneNumber} visible={touched.phoneNumber} />
+
                 <TextInput
                   name='password'
                   leftIconName='key-variant'
@@ -86,10 +139,11 @@ export const SignupScreen = ({ navigation }) => {
                 <FormErrorMessage
                   error={errors.password}
                   visible={touched.password} />
+
                 <TextInput
                   name='confirmPassword'
                   leftIconName='key-variant'
-                  placeholder='Confirm password' // Changed placeholder
+                  placeholder='Confirm password'
                   autoCapitalize='none'
                   autoCorrect={false}
                   secureTextEntry={confirmPasswordVisibility}
@@ -102,6 +156,7 @@ export const SignupScreen = ({ navigation }) => {
                 <FormErrorMessage
                   error={errors.confirmPassword}
                   visible={touched.confirmPassword} />
+
                 <TextInput
                   name='firstName'
                   placeholder='Enter First Name'
@@ -110,6 +165,7 @@ export const SignupScreen = ({ navigation }) => {
                   onChangeText={handleChange('firstName')}
                   onBlur={handleBlur('firstName')} />
                 <FormErrorMessage error={errors.firstName} visible={touched.firstName} />
+
                 <TextInput
                   name='lastName'
                   placeholder='Enter Last Name'
@@ -118,26 +174,10 @@ export const SignupScreen = ({ navigation }) => {
                   onChangeText={handleChange('lastName')}
                   onBlur={handleBlur('lastName')} />
                 <FormErrorMessage error={errors.lastName} visible={touched.lastName} />
-                <TextInput
-                  name='phoneNumber'
-                  placeholder='Enter Phone Number'
-                  autoCapitalize='none'
-                  value={values.phoneNumber}
-                  onChangeText={handleChange('phoneNumber')}
-                  onBlur={handleBlur('phoneNumber')} />
-                <TextInput
-                  name='dateOfBirth'
-                  placeholder='Enter Date Of Birth'
-                  autoCapitalize='none'
-                  value={values.dateOfBirth}
-                  onChangeText={handleChange('dateOfBirth')}
-                  onBlur={handleBlur('dateOfBirth')} />
-                <FormErrorMessage error={errors.dateOfBirth} visible={touched.dateOfBirth} />
-                {/* Display Screen Error Messages */}
+
                 {errorState !== '' ? (
                   <FormErrorMessage error={errorState} visible={true} />
                 ) : null}
-                {/* Signup button */}
                 <Button style={styles.button} onPress={handleSubmit}>
                   <Text style={styles.buttonText}>Signup</Text>
                 </Button>
@@ -153,7 +193,7 @@ export const SignupScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16, // Adjust as needed
+    padding: 16,
     backgroundColor: Colors.white,
     zIndex: -1
   },
@@ -166,7 +206,7 @@ const styles = StyleSheet.create({
     color: Colors.black,
     paddingTop: 20
   },
-  button: {
+    button: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
