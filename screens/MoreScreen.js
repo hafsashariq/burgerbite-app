@@ -22,7 +22,7 @@ export const MoreScreen = ({ navigation }) => {
     }, [setUser]);
 
     const settingsList = [
-        { name: user ? "My Account" : "Sign in or create an account", screen: user ? "MyAccountScreen" : "LoginScreen" },
+        { name: user ? "My Account" : "Sign in or create an account", screen: user ? "MyAccountScreen" : "LoginScreen"},
         { name: "Locations", screen: "LocationScreen" },
         { name: "Terms and Conditions", screen: "TermsAndConditionScreen" },
         { name: "Privacy Policy", screen: "PrivacyPolicyScreen" },
