@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Text, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { View, TextInput, Button, FormErrorMessage, HeaderComponent } from '../components';
 import { Colors, auth, db } from '../config';
 import { onAuthStateChanged } from 'firebase/auth';

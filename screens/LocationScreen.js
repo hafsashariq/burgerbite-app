@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Button, TouchableOpacity, FlatList, Linking, Platform, Image } from 'react-native';
-import MapView, { Marker, Callout } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { Colors, db, Images } from '../config';
 import { HeaderComponent, Logo } from '../components';
 import * as Location from 'expo-location';

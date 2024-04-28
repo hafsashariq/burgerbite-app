@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, Image } from 'react-native'; // Import ImageBackground and Image
+import { Text, TouchableOpacity, ImageBackground } from 'react-native'; // Import ImageBackground and Image
 import { Colors, Images } from '../config';
 
 export const LoginComponent = ({ navigation }) => {

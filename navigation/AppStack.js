@@ -1,7 +1,7 @@
 // AppStack.js
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen, OfferScreen, RewardScreen, LocationScreen, MyAccountScreen, MoreScreen, DetailScreen, LoginScreen, SignupScreen, ForgotPasswordScreen, MyOfferScreen } from '../screens';
+import { HomeScreen, RewardScreen, LocationScreen, MyAccountScreen, MoreScreen, DetailScreen, LoginScreen, SignupScreen, ForgotPasswordScreen, MyOfferScreen } from '../screens';
 
 const { Navigator, Screen } = createStackNavigator();
 
