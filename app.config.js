@@ -2,8 +2,8 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'BurgerBite Loyalty',
-    slug: 'burgerbite-loyalty',
+    name: 'BurgerPoint Loyalty',
+    slug: 'burgerpoint-loyalty',
     privacy: 'public',
     platforms: ['ios', 'android'],
     version: '0.15.0',
@@ -19,10 +19,10 @@ export default {
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: true,
-      bundleIdentifier: "au.com.burgerbite.loyalty.ios"
+      bundleIdentifier: "au.com.burgerpoint.loyalty.ios"
     },
     android:{
-      package: "au.com.burgerbite.loyalty.android"
+      package: "au.com.burgerpoint.loyalty.android"
     },
     extra: {
       apiKey: process.env.API_KEY,
